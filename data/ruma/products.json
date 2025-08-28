@@ -1,0 +1,32 @@
+[
+    {
+        "id": "ruma_carousel01",
+        "name": "商品列表",
+        "keyword": "我要看桂竹小物",
+        "template": "productCarousel",
+        "products": [
+            {
+            "id": "01",
+            "name": "桂竹小物",
+            "desc": "Top3 熱賣清單公開",
+            "image": "https://i.pinimg.com/originals/cc/50/63/cc506354d3bd16a508b013e1bc037a96.jpg",
+            "url": "https://famistore.famiport.com.tw/users/3213872/merchandise/2128468"
+            },
+            {
+            "id": "02",
+            "name": "竹編手作",
+            "desc": "Top3 熱賣清單公開",
+            "image": "https://i.pinimg.com/originals/cc/50/63/cc506354d3bd16a508b013e1bc037a96.jpg",
+            "url": "https://famistore.famiport.com.tw/users/3213872/merchandise/3693856"
+            },
+            {
+            "id": "03",
+            "name": "竹編手作",
+            "desc": "Top3 熱賣清單公開",
+            "image": "https://i.pinimg.com/originals/cc/50/63/cc506354d3bd16a508b013e1bc037a96.jpg",
+            "url": "https://famistore.famiport.com.tw/users/3213872/merchandise/3693580"
+            }
+        ]
+    }
+]
+

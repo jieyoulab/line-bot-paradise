@@ -3,7 +3,8 @@
 const express = require('express');
 const { middleware } = require('@line/bot-sdk');
 const { getTenantByChannelId } = require('../infra/envTenants'); // 從 .env 載入租戶
-const getClientFor = require('../infra/lineClient');             // 依租戶快取 LINE Client
+const getClientFor = require('../infra/lineClient'); 
+const { handleTextMessage } = require('../handlers/messageHandler');            // 依租戶快取 LINE Client
 
 const router = express.Router();
 
@@ -52,6 +53,9 @@ router.post('/:channelId',
 
         // 2) 預設商務邏輯
         if (event.type === 'message' && event.message?.type === 'text') {
+          const handled = await handleTextMessage(event, client, tenant);
+          if (handled) return; // 已處理就直接 return
+          // 沒匹配到商品，再做預設回覆
           return safeReply(client, event.replyToken, {
             type: 'text',
             text: `(${tenant.key}) Echo: ${event.message.text}`,
@@ -75,7 +79,12 @@ router.post('/:channelId',
         // 其他事件先忽略
         return;
       } catch (err) {
-        req.log?.error({ err, eventType: event?.type }, 'event handling failed');
+        req.log?.error({
+          status: err?.statusCode || err?.originalError?.response?.status,
+          message: err.message,
+          data: err?.originalError?.response?.data,
+          eventType: event?.type
+        }, 'event handling failed');
       }
     }));
 

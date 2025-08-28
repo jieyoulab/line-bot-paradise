@@ -1,0 +1,13 @@
+[
+    {
+        "id": "ruma_info01",
+        "keyword": "櫓榪工作室",
+        "template": "quickReply",
+        "items": [
+            { "label": "Facebook 專頁", "type": "uri", "uri": "https://www.facebook.com/MuduRuma/" },
+            { "label": "Instagram", "type": "uri", "uri": "https://www.instagram.com/muduruma_master/" },
+            { "label": "影音圖文報導", "type": "uri", "uri": "https://www.youtube.com/watch?v=vzatD2Ysl1g" },
+            { "label": "市集展售訊息", "type": "uri", "uri": "https://www.facebook.com/MuduRuma/" }
+        ]
+    }
+]

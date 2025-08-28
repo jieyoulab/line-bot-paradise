@@ -107,4 +107,20 @@ async function setDefault(id, token) {
   await api(`/v2/bot/user/all/richmenu/${id}`, { method: 'POST' }, token);
 }
 
-module.exports = { createMenu, setAlias, setDefault };
+/**
+ * 取得使用者個人資料
+ */
+async function getUserProfile(userId, token) {
+  const res = await api(`/v2/bot/profile/${userId}`, { method: 'GET' }, token);
+  return res.json;
+}
+
+/**
+ * 移除單一使用者的 richmenu 綁定
+ * - 移除後，LINE 會自動套用 default richmenu
+ */
+async function resetUser(userId, token) {
+  await api(`/v2/bot/user/${userId}/richmenu`, { method: 'DELETE' }, token);
+}
+
+module.exports = { createMenu, setAlias, setDefault, resetUser, getUserProfile };
