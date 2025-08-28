@@ -1,3 +1,5 @@
+//會回一個完整的文字訊息＋quickReply 物件」
+
 module.exports = function buildQuickReply(items) {
   return {
     type: 'text',
