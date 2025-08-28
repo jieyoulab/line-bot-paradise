@@ -5,8 +5,8 @@ module.exports = function () {
   const TENANT = 'ruma';
   const BASE   = `public/richmenu/${TENANT}`;
 
-  const SP = 32;                 // 上下留白
-  const BTN_W = 537;             // 按鈕寬
+  const SP = 32;                 // 上下留白 邊距（padding），這裡用在 上/下 與右側欄與邊界的間距
+  const BTN_W = 537;             // 右側三顆直欄按鈕的固定寬度 //右側直欄的 左上角 x 座標。算式＝總寬 − 邊距 − 按鈕寬 → 讓右欄緊貼右邊距 SP
   const RIGHT_X = SIZE.width - SP - BTN_W;
 
   const TOTAL_HEIGHT = SIZE.height - SP * 2;  // 可用高度
@@ -78,7 +78,7 @@ module.exports = function () {
 
   // 這裡 alias 用短字，deploy 會變成 ruma_primary / ruma_second
   return [
-    { alias: 'primary', name: '櫓榪工作室', image: `${BASE}/primary.v1.png`, areas: primary },
+    { alias: 'primary', name: '櫓榪工作室', image: `${BASE}/primary.v2.png`, areas: primary },
     // { alias: 'second',  name: '竹部落',     image: `${BASE}/second.v1.png`,  areas: second  },
   ];
 };

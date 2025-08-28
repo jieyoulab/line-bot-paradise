@@ -1,6 +1,7 @@
 // scripts/richmenu/shared/layout.js
 
 // LINE Rich Menu 官方尺寸
+//SIZE 通常代表 Rich Menu 畫布大小（例如 { width: 2500, height: 1686 }）
 const SIZE = { width: 2500, height: 1686 };
 
 // 將整數 total 平均切 parts 份（最後一份吃餘數）
@@ -25,6 +26,7 @@ function makeColumns({ left = 24, right = 24, gutter = 24, cols = 3 }) {
 }
 
 // 驗證點擊區域是否越界與是否重疊（回傳錯誤字串陣列）
+//檢查每個區塊是否在畫布內、是否重疊、寬高是否為正數等
 function validateAreas(areas) {
   const errs = [];
   for (const a of areas) {
