@@ -4,7 +4,13 @@ const express = require('express');
 const { middleware } = require('@line/bot-sdk');
 const { getTenantByChannelId } = require('../infra/envTenants'); // 從 .env 載入租戶
 const getClientFor = require('../infra/lineClient'); 
-const { handleTextMessage } = require('../handlers/messageHandler');            // 依租戶快取 LINE Client
+ // 依租戶快取 LINE Client
+const { handleTextMessage } = require('../handlers/messageHandler');           
+
+//在 routes 掛上事件分派器
+const evevtDispatcher= require('../handlers/enevtDispatcher');
+
+
 
 const router = express.Router();
 
@@ -51,16 +57,23 @@ router.post('/:channelId',
           if (done) return;
         }
 
+        /**
+         * 導入eventDispatcher
+         */
+        // 1.5) // 先交給分派器試試（目前一定回 false，所以後面的既有邏輯照跑）
+        const dispatched = await evevtDispatcher(event, client, tenant);
+        if (dispatched) return;
+
         // 2) 預設商務邏輯
-        if (event.type === 'message' && event.message?.type === 'text') {
-          const handled = await handleTextMessage(event, client, tenant);
-          if (handled) return; // 已處理就直接 return
-          // 沒匹配到商品，再做預設回覆
-          return safeReply(client, event.replyToken, {
-            type: 'text',
-            text: `(${tenant.key}) Echo: ${event.message.text}`,
-          }, req);
-        }
+        // if (event.type === 'message' && event.message?.type === 'text') {
+        //   const handled = await handleTextMessage(event, client, tenant);
+        //   if (handled) return; // 已處理就直接 return
+        //   // 沒匹配到商品，再做預設回覆
+        //   return safeReply(client, event.replyToken, {
+        //     type: 'text',
+        //     text: `(${tenant.key}) Echo: ${event.message.text}`,
+        //   }, req);
+        // }
 
         if (event.type === 'postback') {
           return safeReply(client, event.replyToken, {
@@ -75,6 +88,14 @@ router.post('/:channelId',
             text: `歡迎加入（${tenant.key}）！`,
           }, req);
         }
+
+        // 4) ★ Fallback：若還沒被處理，且是文字訊息，就回 Echo，避免沉默
+       if (event.replyToken && event.type === 'message' && event.message?.type === 'text') {
+         return safeReply(client, event.replyToken, {
+         type: 'text',
+         text: `(${tenant.key}) Echo: ${event.message.text}`,
+       }, req);
+     }
 
         // 其他事件先忽略
         return;
@@ -94,6 +115,9 @@ router.post('/:channelId',
 
 
 function safeRequire(p) { try { return require(p); } catch { return null; } }
+
+const handleEventDispatcher =
+  safeRequire('../handlers/eventDispatcher') || (async () => false);
 
 async function safeReply(client, replyToken, message, req) {
   try {
