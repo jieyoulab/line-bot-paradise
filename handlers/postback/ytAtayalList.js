@@ -93,36 +93,36 @@ async function handle({ event, client /*, tenant, data */ }) {
   // 你的內容（可自由新增／調整）
   const videos = [
     {
+        id: 'AofMLXTXyBA',
+        title: '《竹葉之青》-2023桃園城市紀錄片',
+        channel: '桃園城市紀錄片',
+        desc: '阿山與櫓祝是一對在部落長大的夫妻，他們想透過伐竹經驗來為部落創造工作機會...',
+        //director: '陳駿騰',
+        //runtime: 835,
+        //publishedAt: '2023年6月13日',
+        url: 'https://www.youtube.com/watch?v=AofMLXTXyBA'
+    },
+    {
       id: 'YuKFv-64fJs',
       title: '《築業之間》山林裡的寶藏：泰雅族與桂竹',
       channel: '2023地創微電影入圍影片',
       desc: [
-        '敘述桃園復興泰雅青年們在山區蓊鬱的桂竹林中，奮力揮刀砍竹，一刀一劍揮出竹產業的希望。從產地到市場，一心尋回輝煌的竹業史。'
+        '桃園復興泰雅青年們在蓊鬱的桂竹林中，一刀一劍揮出竹產業的希望。從產地到市場...'
       ].join('\n'),
-      director: '導演-陳駿騰',
+      //director: '導演-陳駿騰',
       //runtime: '24:20',                 // 或秒數 754
       //publishedAt: '2023年12月12日',        // 任意字串也可
       url: 'https://www.youtube.com/watch?v=YuKFv-64fJs&t=184s'
     },
     {
       id: 'o8585w37PZM',
-      title: '【出力CEO】櫓榪竹工作室_ Ruma竹業 升級在地創生',
-      channel: '【櫓祝的創業座右銘：傳承的使命就是永續經營。】',
-      desc: '今天要介紹的CEO是來自桃園復興區 #義興部落 的櫓祝，他為了推廣泰雅族的竹子文化，以竹子做材料開發文創商品，也規劃相關體驗遊程，就是要讓更多人認識「桂竹故鄉」的故事。',
+      title: '櫓榪竹工作室_ Ruma竹業 升級在地創生',
+      channel: '原視 TITV+',
+      desc: 'CEO是來自桃園復興區義興部落的櫓祝，為了推廣泰雅族竹子文化...',
       //director: '——',
-      runtime: '48:40',
-      publishedAt: '2024-12-10',
+      //runtime: '48:40',
+      //publishedAt: '2024-12-10',
       url: 'https://www.youtube.com/watch?v=o8585w37PZM&t=1s'
-    },
-    {
-      id: 'VIDEO_ID_3',
-      title: '竹器在部落生活中的角色',
-      channel: '泰雅與桂竹專題',
-      desc: '從日常器物到禮儀象徵，竹器如何連結族群與土地。',
-      director: '——',
-      runtime: 835,
-      publishedAt: '2023-07-02',
-      url: 'https://www.youtube.com/watch?v=VIDEO_ID_3'
     }
   ];
 
