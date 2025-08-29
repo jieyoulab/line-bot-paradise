@@ -7,7 +7,8 @@ const config = require('../config');               // 用 config.get() 拿設定
 const app = require('../app');                     // Express app
 const logger = require('../utils/logger')('www');
 
-const port = Number(config.get?.('web.port')) || Number(process.env.PORT) || 3010;
+// const port = Number(config.get?.('web.port')) || Number(process.env.PORT) || 3010;
+const port = Number(process.env.PORT) || Number(config.get?.('web.port')) || 3010;
 app.set('port', port);
 
 const server = http.createServer(app);
