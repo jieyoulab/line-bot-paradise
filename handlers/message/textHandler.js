@@ -4,17 +4,17 @@
 const path = require('path');
 const fs = require('fs');
 const axios = require('axios');
-// const cheerio = require('cheerio'); // 若要用 Fami 抓取再打開
+// const cheerio = require('cheerio'); // 若要用 Fami 抓取再打開（避免未定義）
 
-// Flex 產生器（位於專案根的 flex/，此檔案在 handlers/message/ 底下 → ../../）
-const productCard     = require('../../flex/bubble/productCard');
-const productCarousel = require('../../flex/carousel/productCarousel');
+// ===== Flex 產生器 =====
+const productCard       = require('../../flex/bubble/productCard');
+const productCarousel   = require('../../flex/carousel/productCarousel');
+const partnerCard       = require('../../flex/bubble/partnerCard');
+const partnerCarousel   = require('../../flex/carousel/partnerCarousel');
 
-// Quick Reply builder（舊：支援 message / uri）
-const buildQuickReply = require('../../flex/quickReply');
-
-// 復興桂竹夥伴（新：純 postback）
-const buildQuickReplyPostback = require('../../flex/utils/quickReplyPostback');
+// ===== Quick Reply =====
+const buildQuickReply           = require('../../flex/quickReply');                 // 舊：支援 message/uri
+const buildQuickReplyPostback   = require('../../flex/utils/quickReplyPostback');  // 新：純 postback
 
 // ====== 單檔 loader（讀 data/<tenant>/*.json） ======
 function loadProducts(tenantKey) {
@@ -31,25 +31,21 @@ function loadQuickReplies(tenantKey) {
   return Array.isArray(data) ? data : [data];
 }
 
-// --- 小工具：根據 template 選擇 renderer ---
+// --- 小工具：把 quick reply 模板轉成訊息物件（會帶 quickReply 屬性）---
 function renderQuickReplyMessage(tpl) {
-  // 純 postback（你的 ruma_partner_qr）
   if (tpl.template === 'quickReplyPostback') {
     return buildQuickReplyPostback({
       text: `${tpl.keyword}：請選擇 👇`,
       items: tpl.items
     });
   }
-  // 其他（像 ruma_info01：uri/message）
-  // 你的 buildQuickReply(items) 介面是舊的 → 保持不動
-  return buildQuickReply(tpl.items);
+  return buildQuickReply(tpl.items); // 舊格式：items 內可混 message/uri
 }
 
-// （可選）Famistore 商品資料
+// （可選）Famistore 商品資料：啟用時，記得把上面的 cheerio 解註
 async function fetchProductFromFami(url) {
   const res = await axios.get(url);
   const $ = cheerio.load(res.data);
-
   const name = $('.product-title').text().trim();
   const img = $('.product-main-img img').attr('src');
   const specs = [];
@@ -70,41 +66,65 @@ async function handleTextMessage(event, client, tenant) {
   const quickReplies = loadQuickReplies(tenant.key);
   const matchedQR = quickReplies.find(q => text === q.keyword);
 
-  const products = loadProducts(tenant.key);
-  const matchedProducts = products.filter(p => text === p.keyword);
+  const templates = loadProducts(tenant.key);     // 這裡同時承載商品/夥伴等各種模板
+  const matchedTemplates = templates.filter(t => text === t.keyword);
 
-  // 2) 命中商品 → 組 Flex；若也命中 QR 就掛在 Flex 上
-  if (matchedProducts.length > 0) {
-    const product = matchedProducts[0];
+  // 2) 命中模板 → 依 template 決定 renderer；若也命中 QR 就把 quickReply 掛在同一則訊息上
+  if (matchedTemplates.length > 0) {
+    const tpl = matchedTemplates[0];              // ←★★ 用 tpl，避免未定義
     let contents;
 
-    if (product.template === 'productCarousel') {
-      contents = (Array.isArray(product.products) && product.products.length > 0)
-        ? productCarousel(product.products)
-        : productCard(product);
-    } else {
-      contents = productCard(product);
+    if (tpl.template === 'partnerCarousel') {
+      const list = Array.isArray(tpl.partners) ? tpl.partners
+                : Array.isArray(tpl.products) ? tpl.products
+                : [];
+      contents = partnerCarousel(list, { size: 'deca' });
+    }
+    else if (tpl.template === 'partnerCard') {
+      contents = partnerCard(tpl, { size: 'deca' });
+    }
+    else if (tpl.template === 'productCarousel') {
+      contents = (Array.isArray(tpl.products) && tpl.products.length > 0)
+        ? productCarousel(tpl.products)
+        : productCard(tpl); // 後備：只有一筆時就用單卡
+    }
+    else {
+      // 預設當作 productCard
+      contents = productCard(tpl);
     }
 
     const msg = {
       type: 'flex',
-      altText: product.name || '內容',
+      altText: tpl.name || '內容',
       contents
     };
 
     if (matchedQR) {
-      // ✅ 改用 renderQuickReplyMessage（自動判斷 quickReply / quickReplyPostback）
-      const { quickReply } = renderQuickReplyMessage(matchedQR); // 只取 quickReply 區塊
+      const { quickReply } = renderQuickReplyMessage(matchedQR); // 只掛 quickReply
       msg.quickReply = quickReply;
     }
 
-    await client.replyMessage(event.replyToken, [msg]);
+    // ★ 新增：如果是合作夥伴模板，再多回一則「看介紹影片」的文字訊息（掛 postback quick reply）
+    const messages = [msg];
+    if (tpl.template === 'partnerCarousel' || tpl.template === 'partnerCard') {
+      const videoQRMsg = buildQuickReplyPostback({
+        text: '想更了解復興桂竹與泰雅族文化？點下方按鈕看介紹影片 👇',
+        items: [
+          { label: '復興桂竹系列', data: 'action=yt_bamboo_list' },
+          { label: '泰雅族與桂竹', data: 'action=yt_atayal__list' },
+          { label: '桂竹協會系列', data: 'action=yt_corporate__list' }
+        ]
+      });
+      messages.push(videoQRMsg);
+
+      
+    }
+    await client.replyMessage(event.replyToken, messages); 
     return true;
   }
 
   // 3) 僅命中 Quick Reply → 回「文字 + Quick Reply」
   if (matchedQR) {
-    // ✅ 改用 renderQuickReplyMessage（自動判斷 quickReply / quickReplyPostback）
     await client.replyMessage(event.replyToken, renderQuickReplyMessage(matchedQR));
     return true;
   }
@@ -112,7 +132,8 @@ async function handleTextMessage(event, client, tenant) {
   // 4) （可選）Famistore 連結 → 嘗試抓取並回 Flex
   if (text.includes('famistore.famiport.com.tw')) {
     try {
-      // 若要啟用，記得把上面的 cheerio require 打開
+      // 使用前請確保已 require cheerio
+      if (typeof cheerio === 'undefined') throw new Error('cheerio 未載入，請取消上方註解');
       const productData = await fetchProductFromFami(text);
       const contents = productCard(productData);
 

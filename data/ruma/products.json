@@ -32,24 +32,30 @@
     {
       "id": "ruma_partner01",
       "name": "復興桂竹合作夥伴",
-      "keyword": "復興桂竹合作夥伴", 
-      "template": "productCarousel",
+      "keyword": "復興桂竹合作夥伴",
+      "template": "partnerCarousel",
       "products": [
         {
           "id": "01",
           "name": "友順竹業",
           "desc": "由桃園市復興區當地泰雅族青年經營桂竹伐採收穫及桂竹林管理規劃的林業公司",
-          "image": "https://example.com/youshun.jpg",
-          "url": "https://example.com/youshun",
+          "image": "https://i.ibb.co/wZj3Scmb/482058663-572308349182519-5511955881176824827-n.jpg",
+          "url": "https://www.facebook.com/people/%E5%8F%8B%E9%A0%86%E7%AB%B9%E6%A5%AD/100092100769923/",
           "phone": "0907-874-375",
-          "email": "liliru.bamboo336@gmail.com"
+          "email": "liliru.bamboo336@gmail.com",
+          "address": "桃園市復興區",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E5%8F%8B%E9%A0%86%E7%AB%B9%E6%A5%AD%20%E6%A1%83%E5%9C%92%E5%B8%82%E5%BE%A9%E8%88%88%E5%8D%80"
         },
         {
           "id": "02",
-          "name": "桂竹協會臉書專頁_Taiwan Makino Bamboo",
-          "desc": "本協會成立於106年10月11日，任務是致力於地方桂竹產業永續發展及傳承，促進竹農穩定就業與相關社區營造。",
-          "image": "https://example.com/assoc.jpg",
-          "url": "https://www.facebook.com/Taiwan.bamboo336/?locale=zh_TW"
+          "name": "桂竹協會",
+          "desc": "本協會成立於106年10月11日，致力於地方桂竹產業永續發展及傳承，促進竹農穩定就業與社區營造。",
+          "image": "https://i.ibb.co/5Zyzrg6/2025-08-30-1-42-31.png",
+          "url": "https://www.facebook.com/Taiwan.bamboo336",
+          "url_ig": "https://www.instagram.com/bamboo_336/",
+          "email": "trtbamboo2021@gmail.com",
+          "address": "336 桃園市復興區義盛里4鄰1號",
+          "mapUrl": "https://www.google.com/maps/search/?api=1&query=%E6%A1%83%E5%9C%92%E5%B8%82%E5%BE%A9%E8%88%88%E5%8D%80%20%E7%BE%A9%E7%9B%9B%E9%87%8C%204%E9%84%B0%201%E8%99%9F"
         },
         {
           "id": "03",
