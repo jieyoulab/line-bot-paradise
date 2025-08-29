@@ -30,14 +30,37 @@
         ]
     },
     {
-        "id": "ruma_partner01",
-        "name": "復興桂竹合作夥伴",
-        "keyword": "復興桂竹合作夥伴", 
-        "template": "productCard",
-        "desc": "與在地商家、職人的合作地圖與最新消息",
-        "image": "https://example.com/partner-cover.jpg",
-        "url": "https://example.com/partners"
-      }
+      "id": "ruma_partner01",
+      "name": "復興桂竹合作夥伴",
+      "keyword": "復興桂竹合作夥伴", 
+      "template": "productCarousel",
+      "products": [
+        {
+          "id": "01",
+          "name": "友順竹業",
+          "desc": "由桃園市復興區當地泰雅族青年經營桂竹伐採收穫及桂竹林管理規劃的林業公司",
+          "image": "https://example.com/youshun.jpg",
+          "url": "https://example.com/youshun",
+          "phone": "0907-874-375",
+          "email": "liliru.bamboo336@gmail.com"
+        },
+        {
+          "id": "02",
+          "name": "桂竹協會臉書專頁_Taiwan Makino Bamboo",
+          "desc": "本協會成立於106年10月11日，任務是致力於地方桂竹產業永續發展及傳承，促進竹農穩定就業與相關社區營造。",
+          "image": "https://example.com/assoc.jpg",
+          "url": "https://www.facebook.com/Taiwan.bamboo336/?locale=zh_TW"
+        },
+        {
+          "id": "03",
+          "name": "合作地圖總覽",
+          "desc": "與在地商家、職人的合作地圖與最新消息",
+          "image": "https://example.com/partner-cover.jpg",
+          "url": "https://example.com/partners"
+        }
+      ]
+    }
+    
       
 ]
 

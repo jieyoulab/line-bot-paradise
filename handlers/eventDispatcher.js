@@ -11,7 +11,8 @@ const logger = makeLogger('handlers/eventDispatcher');
 
 // （預留：Phase 3 以後才會打開這些 require）
 const handleMessage  = require('./message');
-// const handlePostback = require('./postback');
+// 🔑 用解構把具名輸出取進來
+const { handlePostback } = require('./postback');
 // const handleFollow   = require('./follow');
 // const handleMember   = require('./member');
 
@@ -32,7 +33,10 @@ module.exports = async function eventDispatcher(event, client, tenant) {
 
     //點選postback action發生對應動作(很常用)
     case 'postback':
-      return false;
+      //return false;
+      // 交給 postback 總入口（具名輸出）
+      return handlePostback({ event, client, tenant });
+
 
     //加好友 或 封鎖
     case 'follow': 

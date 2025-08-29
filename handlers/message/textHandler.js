@@ -9,8 +9,12 @@ const axios = require('axios');
 // Flex 產生器（位於專案根的 flex/，此檔案在 handlers/message/ 底下 → ../../）
 const productCard     = require('../../flex/bubble/productCard');
 const productCarousel = require('../../flex/carousel/productCarousel');
-// Quick Reply builder（統一用這個名稱）
+
+// Quick Reply builder（舊：支援 message / uri）
 const buildQuickReply = require('../../flex/quickReply');
+
+// 復興桂竹夥伴（新：純 postback）
+const buildQuickReplyPostback = require('../../flex/utils/quickReplyPostback');
 
 // ====== 單檔 loader（讀 data/<tenant>/*.json） ======
 function loadProducts(tenantKey) {
@@ -25,6 +29,20 @@ function loadQuickReplies(tenantKey) {
   if (!fs.existsSync(file)) return [];
   const data = JSON.parse(fs.readFileSync(file, 'utf-8'));
   return Array.isArray(data) ? data : [data];
+}
+
+// --- 小工具：根據 template 選擇 renderer ---
+function renderQuickReplyMessage(tpl) {
+  // 純 postback（你的 ruma_partner_qr）
+  if (tpl.template === 'quickReplyPostback') {
+    return buildQuickReplyPostback({
+      text: `${tpl.keyword}：請選擇 👇`,
+      items: tpl.items
+    });
+  }
+  // 其他（像 ruma_info01：uri/message）
+  // 你的 buildQuickReply(items) 介面是舊的 → 保持不動
+  return buildQuickReply(tpl.items);
 }
 
 // （可選）Famistore 商品資料
@@ -75,7 +93,8 @@ async function handleTextMessage(event, client, tenant) {
     };
 
     if (matchedQR) {
-      const { quickReply } = buildQuickReply(matchedQR.items); // 只取 quickReply 區塊
+      // ✅ 改用 renderQuickReplyMessage（自動判斷 quickReply / quickReplyPostback）
+      const { quickReply } = renderQuickReplyMessage(matchedQR); // 只取 quickReply 區塊
       msg.quickReply = quickReply;
     }
 
@@ -85,7 +104,8 @@ async function handleTextMessage(event, client, tenant) {
 
   // 3) 僅命中 Quick Reply → 回「文字 + Quick Reply」
   if (matchedQR) {
-    await client.replyMessage(event.replyToken, buildQuickReply(matchedQR.items));
+    // ✅ 改用 renderQuickReplyMessage（自動判斷 quickReply / quickReplyPostback）
+    await client.replyMessage(event.replyToken, renderQuickReplyMessage(matchedQR));
     return true;
   }
 

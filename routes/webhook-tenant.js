@@ -5,11 +5,11 @@ const { middleware } = require('@line/bot-sdk');
 const { getTenantByChannelId } = require('../infra/envTenants'); // 從 .env 載入租戶
 const getClientFor = require('../infra/lineClient'); 
  // 依租戶快取 LINE Client
-const { handleTextMessage } = require('../handlers/message/textHandler.js');           
+// const { handleTextMessage } = require('../handlers/message/textHandler.js');           
 
 
 //在 routes 掛上事件分派器
-const evevtDispatcher= require('../handlers/enevtDispatcher');
+const eventDispatcher= require('../handlers/eventDispatcher.js');
 
 
 
@@ -62,7 +62,7 @@ router.post('/:channelId',
          * 導入eventDispatcher
          */
         // 1.5) // 先交給分派器試試（目前一定回 false，所以後面的既有邏輯照跑）
-        const dispatched = await evevtDispatcher(event, client, tenant);
+        const dispatched = await eventDispatcher(event, client, tenant);
         if (dispatched) return;
 
         // 2) 預設商務邏輯
@@ -76,6 +76,7 @@ router.post('/:channelId',
         //   }, req);
         // }
 
+        // Fallback（保留）：如果 postback 未被處理就回 echo
         if (event.type === 'postback') {
           return safeReply(client, event.replyToken, {
             type: 'text',
