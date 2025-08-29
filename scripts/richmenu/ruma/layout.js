@@ -42,10 +42,10 @@ module.exports = function () {
       // { bounds: B3, action: { type: 'postback', data: 'action=about',   displayText: '關於我們' } },
       // 測試
       { bounds: B1, action: { type: 'message', text: '活動報名' } },
-      { bounds: B2, action: { type: 'message', text: '我要看桂竹小物' } },
-      { bounds: B3, action: { type: 'message', text: '團體預約' } },
-      { bounds: B4, action: { type: 'message', text: '櫓榪工作室' } },
-      { bounds: B5, action: { type: 'message', text: '竹部落' } }, 
+      { bounds: B2, action: { type: 'message', text: '櫓榪店舖' } },
+      { bounds: B3, action: { type: 'message', text: '團體活動預約' } },
+      { bounds: B4, action: { type: 'message', text: '櫓榪竹工作室最新消息' } },
+      { bounds: B5, action: { type: 'message', text: '復興桂竹合作夥伴' } }, 
       //復興桂竹合作夥伴
     ];
     const errs = validateAreas(areas); if (errs.length) throw new Error(errs.join('; '));

@@ -1,7 +1,7 @@
 [
     {
         "id": "ruma_info01",
-        "keyword": "櫓榪工作室",
+        "keyword": "櫓榪竹工作室最新消息",
         "template": "quickReply",
         "items": [
             { "label": "Facebook 專頁", "type": "uri", "uri": "https://www.facebook.com/MuduRuma/" },
@@ -12,7 +12,7 @@
     },
     {
         "id": "ruma_partner_qr",
-        "keyword": "竹部落",
+        "keyword": "復興桂竹合作夥伴",
         "template": "quickReply",
         "items": [
           { "label": "合作清單", "type": "uri",     "uri": "https://example.com/partners/list" },
