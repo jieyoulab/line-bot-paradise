@@ -65,7 +65,71 @@
           "url": "https://example.com/partners"
         }
       ]
+    },{
+      "id": "ruma_apply01",
+      "name": "活動報名",
+      "keyword": "活動報名",
+      "template": "applyForm",
+      "products": [
+        {
+          "id": "evt_20240921_oak",
+          "name": "山林竹藝一日體驗｜復興區",
+          "desc": "手作竹編、走讀桂竹林，附在地風味便當",
+          "image": "https://example.com/events/oakworkshop.jpg",
+          "date": "2025-09-21",
+          "time": "09:30–16:30",
+          "location": "桃園市復興區 義盛里",
+          "price": 1200,
+          "spots": { "total": 30, "left": 8 },
+          "tags": ["手作", "親子", "戶外"],
+          "status": "open",
+          "applyUrl": "https://example.com/ruma/apply?event=evt_20240921_oak",
+          "detailUrl": "https://example.com/ruma/events/evt_20240921_oak"
+        },
+        {
+          "id": "evt_20251005_forest",
+          "name": "竹林走讀｜產業踏查路線",
+          "desc": "與泰雅青年一起了解桂竹從山到市的旅程",
+          "image": "https://example.com/events/forestwalk.jpg",
+          "date": "2025-10-05",
+          "time": "08:30–12:00",
+          "location": "桃園市復興區",
+          "price": 800,
+          "spots": { "total": 25, "left": 0 },
+          "tags": ["走讀", "文化"],
+          "status": "full",
+          "applyUrl": "https://example.com/ruma/apply?event=evt_20251005_forest",
+          "detailUrl": "https://example.com/ruma/events/evt_20251005_forest"
+        },
+        {
+          "id": "evt_20251116_market",
+          "name": "桂竹小市集｜職人相遇",
+          "desc": "職人攤位＋迷你工作坊，適合新手入門體驗",
+          "image": "https://example.com/events/market.jpg",
+          "date": "2025-11-16",
+          "time": "13:00–17:00",
+          "location": "角板山遊客中心",
+          "price": 0,
+          "spots": { "total": 60, "left": 42 },
+          "tags": ["市集", "入門"],
+          "status": "open",
+          "applyUrl": "https://example.com/ruma/apply?event=evt_20251116_market",
+          "detailUrl": "https://example.com/ruma/events/evt_20251116_market"
+        }
+      ],
+      "ui": {
+        "bubbleSize": "kilo",
+        "showTags": true,
+        "showSpots": true,
+        "buttons": [
+          { "type": "uri", "label": "立即報名", "key": "applyUrl" },
+          { "type": "uri", "label": "詳細資訊", "key": "detailUrl", "optional": true }
+        ],
+        "soldOutLabel": "已額滿",
+        "freeLabel": "免費"
+      }
     }
+    
     
       
 ]

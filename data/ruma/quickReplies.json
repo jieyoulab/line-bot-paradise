@@ -19,5 +19,16 @@
         { "label": "泰雅族與桂竹",     "type": "postback", "data": "action=yt_atayal__list" },
         { "label": "桂竹協會系列",     "type": "postback", "data": "action=yt_corporate__list" }
       ]
+    },
+    {
+      "id": "ruma_apply_qr",
+      "keyword": "活動報名",
+      "template": "quickReply",
+      "items": [
+        { "label": "活動報名須知", "type": "uri", "uri": "https://www.facebook.com/MuduRuma/" },
+        { "label": "ATM轉帳須知", "type": "uri", "uri": "https://www.youtube.com/watch?v=vzatD2Ysl1g" },
+        { "label": "退費辦法", "type": "uri", "uri": "https://www.youtube.com/watch?v=vzatD2Ysl1g" },
+        { "label": "常見問題", "type": "uri", "uri": "https://www.youtube.com/watch?v=vzatD2Ysl1g" }
+      ]
     }
 ]
