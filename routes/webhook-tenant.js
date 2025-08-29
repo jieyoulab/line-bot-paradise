@@ -5,7 +5,8 @@ const { middleware } = require('@line/bot-sdk');
 const { getTenantByChannelId } = require('../infra/envTenants'); // 從 .env 載入租戶
 const getClientFor = require('../infra/lineClient'); 
  // 依租戶快取 LINE Client
-const { handleTextMessage } = require('../handlers/messageHandler');           
+const { handleTextMessage } = require('../handlers/message/textHandler.js');           
+
 
 //在 routes 掛上事件分派器
 const evevtDispatcher= require('../handlers/enevtDispatcher');

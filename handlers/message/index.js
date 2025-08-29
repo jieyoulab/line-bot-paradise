@@ -2,23 +2,27 @@
 // message 事件 ==> 底下還有多種子型別：
 // text / image / video / audio / file / location / sticker
 // 建議把它們各自拆成小 handler，然後在 handlers/message/index.js 用「子型別分派」去呼叫
-// 先留空骨架，之後 Phase 3 會啟用
-// handlers/message/index.js
-const { handleTextMessage } = require('../messageHandler'); // 你夥伴原本那支
-const handleImage   = require('./imageHandler');
-const handleVideo   = require('./videoHandler');
-const handleAudio   = require('./audioHandler');
-const handleFile    = require('./fileHandler');
-const handleLocation= require('./locationHandler');
-const handleSticker = require('./stickerHandler');
 
-// 回傳 Promise<boolean>：true=已回覆/處理完；false=未處理，讓外層有機會 fallback
+// handlers/message/index.js
+//const { handleTextMessage } = require('../messageHandler'); // 你夥伴原本那支 ==>  改名成為 textHandler,js
+// handlers/message/index.js
+// message 事件的子型別分派：text / image / video / audio / file / location / sticker
+
+const { handleTextMessage } = require('./textHandler'); // ← 文字事件交給這支
+const handleImage    = require('./imageHandler');
+const handleVideo    = require('./videoHandler');
+const handleAudio    = require('./audioHandler');
+const handleFile     = require('./fileHandler');
+const handleLocation = require('./locationHandler');
+const handleSticker  = require('./stickerHandler');
+
+// 回傳 Promise<boolean>：true=已處理；false=未處理（外層可 fallback）
 module.exports = async function handleMessage(event, client, tenant) {
   const m = event.message;
   if (!m) return false;
 
   const dispatchMap = {
-    text:     (e,c,t) => handleTextMessage(e,c,t), // 沿用現有
+    text:     handleTextMessage,
     image:    handleImage,
     video:    handleVideo,
     audio:    handleAudio,
@@ -28,8 +32,7 @@ module.exports = async function handleMessage(event, client, tenant) {
   };
 
   const fn = dispatchMap[m.type];
-  if (!fn) return false;          // 未支援的子型別
-
+  if (!fn) return false;
   return fn(event, client, tenant);
 };
 

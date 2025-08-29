@@ -9,5 +9,16 @@
             { "label": "影音圖文報導", "type": "uri", "uri": "https://www.youtube.com/watch?v=vzatD2Ysl1g" },
             { "label": "市集展售訊息", "type": "uri", "uri": "https://www.facebook.com/MuduRuma/" }
         ]
-    }
+    },
+    {
+        "id": "ruma_partner_qr",
+        "keyword": "竹部落",
+        "template": "quickReply",
+        "items": [
+          { "label": "合作清單", "type": "uri",     "uri": "https://example.com/partners/list" },
+          { "label": "最新消息", "type": "message", "text": "合作夥伴 最新消息" },
+          { "label": "桂竹小物", "type": "message", "text": "我要看桂竹小物" }
+        ]
+      }
+      
 ]

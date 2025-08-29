@@ -28,6 +28,16 @@
             "url": "https://famistore.famiport.com.tw/users/3213872/merchandise/3693580"
             }
         ]
-    }
+    },
+    {
+        "id": "ruma_partner01",
+        "name": "復興桂竹合作夥伴",
+        "keyword": "竹部落", 
+        "template": "productCard",
+        "desc": "與在地商家、職人的合作地圖與最新消息",
+        "image": "https://example.com/partner-cover.jpg",
+        "url": "https://example.com/partners"
+      }
+      
 ]
 

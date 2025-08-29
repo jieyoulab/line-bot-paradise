@@ -45,7 +45,7 @@ module.exports = function () {
       { bounds: B2, action: { type: 'message', text: '我要看桂竹小物' } },
       { bounds: B3, action: { type: 'message', text: '團體預約' } },
       { bounds: B4, action: { type: 'message', text: '櫓榪工作室' } },
-      { bounds: B5, action: { type: 'message', text: '復興桂竹合作夥伴' } }, 
+      { bounds: B5, action: { type: 'message', text: '竹部落' } }, 
       //復興桂竹合作夥伴
     ];
     const errs = validateAreas(areas); if (errs.length) throw new Error(errs.join('; '));
