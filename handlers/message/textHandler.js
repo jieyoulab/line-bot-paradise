@@ -13,10 +13,10 @@ const productCard       = require('../../flex/bubble/productCard');
 const productCarousel   = require('../../flex/carousel/productCarousel');
 const partnerCard       = require('../../flex/bubble/partnerCard');
 const partnerCarousel   = require('../../flex/carousel/partnerCarousel');
-
+const applyDayCarousel = require('../../flex/carousel/applyDayCarousel');
 // ★ 新增：活動報名（多活動）Carousel
 // 若你的專案資料夾是 flex/carousels（有 s），請改這行路徑
-const applyFormCarousel = require('../../flex/carousel/applyFormCarousel');
+
 
 // ===== Quick Reply =====
 const buildQuickReply           = require('../../flex/quickReply');                 // 舊：支援 message/uri
@@ -106,7 +106,7 @@ async function handleTextMessage(event, client, tenant) {
     else if (tpl.template === 'applyForm') {
       // 1) 先做活動報名的 Carousel
       const list = Array.isArray(tpl.products) ? tpl.products : [];
-      contents = applyFormCarousel(list);
+      contents = applyDayCarousel(list);
     }
     else {
       // 預設當作單卡（避免未知 template 直接噴錯）
