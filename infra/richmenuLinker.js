@@ -1,4 +1,5 @@
 // infra/richmenuLinker.js
+//richmenuLinker 已經會自動把 ${tenantKey}_${alias} 組起來（例如 jieyou_tab2），所以 defaults 回傳的 alias 要用「短字」（'primary'、'tab2'），不要包含租戶前綴
 const fetch = global.fetch || ((...args) => import('node-fetch').then(({ default: f }) => f(...args)));
 
 function api(path, init, token) {

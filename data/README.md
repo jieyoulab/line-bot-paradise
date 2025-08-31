@@ -1,5 +1,16 @@
 # data資料夾下的JSON資料結構
 
+## `data/tenants.json ` => 租戶對應表(還沒有DB)
+- 首次加入好友
+-  => 自動綁定圖文選單 `infra/richmenuLinker.js` 
+-  => 並且把哪一頁的圖文選單作為default `infra/richnebu/default.js` 
+-  => // `infra/richmenu/welcome.js` 功能：依租戶產生「加入好友（follow）」時要回覆的訊息陣列
+-  => 出現好友訊息(bubble) + (歡迎訊息)
+=> `infra/richmenu/welcome.js（讀 tenant.json）`
+=> `jieyou` → 自動載入 `welcomeBrandBubble.js + welcomeText.js`
+=> `ruma` → 自動載入 `rumaBrandBubble.js + rumaWelcomeText.js`
+
+
 
 ## 檔名這樣分 `data/<tenantKey>/products.json`
 

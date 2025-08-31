@@ -1,4 +1,4 @@
-// flex/welcomeBrandBubble.js
+// flex/follow_welcome/welcomeBrandBubble.js
 module.exports = {
     type: "bubble",
     body: {

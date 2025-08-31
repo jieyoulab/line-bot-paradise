@@ -1,0 +1,15 @@
+{
+    "jieyou": {
+      "accountName": "解憂工程所 Jieyou Lab",
+      "defaultAlias": "tab2",
+      "brandBubble": "../../flex/follow_welcome/welcomeBrandBubble",
+      "welcomeText": "../../flex/follow_welcome/welcomeText"
+    },
+    "ruma": {
+      "accountName": "櫓榪竹工作室 Ruma' Studio",
+      "defaultAlias": "primary",
+      "brandBubble": "../../flex/follow_welcome/rumaBrandBubble",
+      "welcomeText": "../../flex/follow_welcome/rumaWelcomeText"
+    }
+  }
+  

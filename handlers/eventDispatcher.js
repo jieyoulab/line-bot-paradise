@@ -18,6 +18,12 @@ const { handlePostback } = require('./postback');
 
 // ★ 新增：follow 當下就綁定 richmenu（個人綁定，繞過客戶端同步延遲）
 const { linkDefaultByTenantAlias } = require('../infra/richmenuLinker');
+
+//初次加入好友綁定richmenu => 設定follow 
+const { getDefaultAliasForTenant } = require('../infra/richmenu/defaults');
+const { buildWelcomeMessages } = require('../infra/richmenu/welcome');
+
+
 module.exports = async function eventDispatcher(event, client, tenant) {
   logger.info('事件分派器', { type: event.type, src: event?.source?.type, tenant: tenant?.key });
     // 可選：開 DEBUG 觀察事件型別，但不改行為
@@ -42,33 +48,38 @@ module.exports = async function eventDispatcher(event, client, tenant) {
 
     //加好友 或 封鎖
     case 'follow': {
-      // 使用者加入好友
       try {
         const userId = event?.source?.userId;
-        if (!userId) return false;
-        if (!tenant) return false; // 多租戶：沒有租戶就不處理
+        if (!userId || !tenant) return false;
 
-        // 綁定當前租戶預設 alias：目前你是 'primary'
+        // 1) 綁預設分頁（短 alias → linker 會組成 `${tenant}_${alias}`）
+        const aliasToBind = getDefaultAliasForTenant(tenant.key); // jieyou → 'tab2'；ruma → 'primary'
         const menuId = await linkDefaultByTenantAlias(
           userId,
           tenant.key,
           tenant.channelAccessToken,
-          'primary'
+          aliasToBind
         );
-        logger.info('follow linked richmenu', { userId, menuId, tenant: tenant.key });
+        logger.info('follow linked richmenu', { userId, tenant: tenant.key, aliasToBind, menuId });
 
-        // 可回一則歡迎訊息，提示使用者展開
-        await client.replyMessage(event.replyToken, [
-          { type: 'text', text: "歡迎加入Ruma'工作室！請點擊下方圖文選單來認識我們吧 ✅" },
-        ]);
+        // 2) 取 Profile（拿暱稱做更貼心的歡迎詞；若拿不到就用內建預設）
+        let nickname = '朋友';
+        try {
+          const profile = await client.getProfile(userId);
+          nickname = profile?.displayName || nickname;
+        } catch { /* 忽略錯誤，保留預設 nickname */ }
 
-        return true; // 已處理
+        // 3) 依租戶組裝歡迎訊息（jieyou = 文字 + Flex；其他租戶用 fallback）
+        const messages = buildWelcomeMessages({ tenantKey: tenant.key, nickname });
+
+        await client.replyMessage(event.replyToken, messages);
+        return true;
       } catch (err) {
         logger.error('follow link richmenu failed', { error: String(err) });
-        // 失敗也不擋住流程
         return false;
       }
     }
+
     case 'unfollow':
       return false;
 

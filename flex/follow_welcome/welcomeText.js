@@ -1,4 +1,4 @@
-// messages/welcomeText.js //accountName
+// flex/follow_welcome/welcomeText.js
 module.exports = function buildWelcomeText({ nickname, accountName="解憂工程" }) {
     return {
       type: "text",

@@ -1,6 +1,6 @@
 // handlers/message/imageHandler.js
-const buildQuickReply = require('../../utils/buildQuickReply');         // 你已有的工具
-const buildImageCarouselFlex = require('../../utils/buildImageCarouselFlex'); // 前面我給你的工具
+const buildQuickReply = require('../../flex/utils/buildQuickReply');         // 你已有的工具
+const buildImageCarouselFlex = require('../../flex/utils/buildImageCarouselFlex'); // 前面我給你的工具
 
 /**
  * 收到「圖片訊息」時的處理器
