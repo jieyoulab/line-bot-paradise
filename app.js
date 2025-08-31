@@ -70,6 +70,7 @@ const webhookLimiter = rateLimit({
     return `${req.params?.channelId || 'na'}:${ipKey}`;
   },
 });
+
 app.use('/webhook', webhookLimiter, tenantWebhook);
 
 // 404

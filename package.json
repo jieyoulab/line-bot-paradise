@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon bin/www.js",
     "start": "node bin/www.js",
+    "deploy-menu": "node scripts/richmenu/deployTenant.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -1,3 +1,6 @@
+//# 部署 ruma 租戶的 richmenu
+//npm run deploy-menu -- ruma
+
 // scripts/richmenu/ruma/layout.js
 const { SIZE, validateAreas } = require('../shared/layout');
 

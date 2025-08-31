@@ -1,5 +1,9 @@
 # data資料夾下的JSON資料結構
-- 
+
+
+## 檔名這樣分 `data/<tenantKey>/products.json`
+
+
 - 本文件說明 `data/<tenantKey>/products.json` 與 `data/<tenantKey>/quickReplies.json` 的結構、維護規則，以及與程式流程的對應。
 - 目前這種 products.json / quickReplies.json 最主要是給 event.type === "message"（尤其 message.type === "text"）用的，因為「使用者輸入或熱區丟文字」需要靠 keyword 對照 來決定回什麼: 
 - 1. Line事件活動分派器 eventDispatcher：判斷 event.type

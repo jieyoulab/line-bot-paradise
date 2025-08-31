@@ -1,4 +1,13 @@
 // routes/webhook-tenant.js
+/**
+ * 這支 routes/webhook-tenant.js 是「多租戶 LINE Webhook 入口」的路由。它負責：
+ * A).依 URL 參數 :channelId 找到對應的租戶 (tenant)
+ * B).用該租戶的 channelSecret 驗簽（防止偽造）
+ * C).建立該租戶專屬的 LINE SDK client
+ * D).逐一分派處理每個事件（先給 demo；再給正式的分派器；最後有各種 Fallback 以免沉默）
+ * E).安全回覆（safeReply）並把錯誤、事件資訊記到 log，便於排查
+ */
+
 // 每個 Channel 自己驗簽（/webhook/:channelId）→ demo 先處理，沒處理再走商務
 const express = require('express');
 const { middleware } = require('@line/bot-sdk');
@@ -15,12 +24,15 @@ const eventDispatcher= require('../handlers/eventDispatcher.js');
 
 const router = express.Router();
 
+//A).依 URL 參數 :channelId 找到對應的租戶 (tenant)
 // ⚠️ 不要在這裡加任何 body parser（middleware 需要 raw body 驗簽）
+//WHY：@line/bot-sdk 的 middleware() 需要 原始 raw body 來做簽章驗證。若先被 JSON 解析器改寫，簽章會失效（出現 401）
 router.post('/:channelId',
-  // (1) 由 :channelId 找租戶，並用該租戶的 secret 驗簽
+  // (1) 依 URL 參數 :channelId 找到對應的租戶 (tenant) 並用該租戶的 secret 驗簽
+  //POST /:channelId 先依 :channelId 找租戶，動態建立一次性的 LINE middleware({ channelSecret }) 驗簽
   (req, res, next) => {
     const tenant = getTenantByChannelId(req.params.channelId);
-    if (!tenant) return res.status(404).send('channel not found');
+    if (!tenant) return res.status(404).send('channel ID not found');
     req.tenant = tenant;
 
     // 用該租戶的 channelSecret 建立一次性的 middleware
@@ -32,11 +44,15 @@ router.post('/:channelId',
         req.log?.warn({ err, channelId: tenant.channelId, tenant: tenant.key }, 'LINE signature validation failed');
         return res.status(401).send('invalid signature');
       }
+      //錯誤攔截：這裡自己接 next(err)，簽章錯誤回 401，不讓錯誤冒到全域 500。安全且好查
       next();
     });
   },
 
-  // (2) 事件處理
+ // D).逐一分派處理每個事件（先給 demo；再給正式的分派器；最後有各種 Fallback 以免沉默）
+  //
+  // 立 Client、解析 events、逐一處理（demo → 分派器 → 各別 Fallback）
+  // (2) 事件處理 用該租戶的 channelSecret 驗簽（防止偽造）
   async (req, res) => {
     const tenant = req.tenant;
     const client = getClientFor(tenant);
@@ -59,9 +75,11 @@ router.post('/:channelId',
         }
 
         /**
-         * 導入eventDispatcher
+         * 導入handlers/ eventDispatcher 事件分派器
          */
         // 1.5) // 先交給分派器試試（目前一定回 false，所以後面的既有邏輯照跑）
+        //→ 這是一個封裝的事件分派器，負責判斷事件類型（message / postback / follow...）
+        //→ 並丟給對應的 handler (handlers/messageHandler.js, handlers/postbackHandler.js 等
         const dispatched = await eventDispatcher(event, client, tenant);
         if (dispatched) return;
 
@@ -115,12 +133,18 @@ router.post('/:channelId',
   }
 );
 
+//WHAT：安全地載入可選模組（例如 ../demo、或備援的 eventDispatcher）。
 
+// HOW：失敗就回 null，不讓 require 例外把流程打爆。
+
+// WHY：便於「可插拔」開發，不必保證 demo 檔案一定存在
 function safeRequire(p) { try { return require(p); } catch { return null; } }
 
 const handleEventDispatcher =
   safeRequire('../handlers/eventDispatcher') || (async () => false);
 
+  //WHAT：包一層 client.replyMessage，把 SDK 失敗時的 LINE 回傳 body 打到 log。
+  //LINE 4xx/5xx 的細節藏在 err.originalError.response.data，直接打出來最省時間排錯（例如 invalid reply token、message too long 等）
 async function safeReply(client, replyToken, message, req) {
   try {
     const messages = Array.isArray(message) ? message : [message];
@@ -133,6 +157,11 @@ async function safeReply(client, replyToken, message, req) {
 }
 
 /* （可選）Upstash Redis 去重範例：避免重送事件重複處理
+//7)（可選）Upstash Redis 去重樣板
+
+WHAT：提供一段範例 alreadyProcessed(event, tenant)，用 SET NX EX 做 60 秒去重，避免 LINE 重送事件造成重覆處理。
+
+WHY：LINE 有重送機制（網路不穩或超時），Idempotency 是實務必要。
 // const redis = require('../infra/redis');
 async function alreadyProcessed(event, tenant) {
   const id = event.message?.id || event.replyToken;

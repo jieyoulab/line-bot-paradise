@@ -1,0 +1,13 @@
+{
+    "key": "jieyou",
+    "name": "解憂工程所",
+    "sources": {
+      "products": "./products.json",
+      "quickReplies": "./quickReplies.json",
+      "imageReply": "./imageReply.json",
+      "menus": "./menus.json"
+    },
+    "ui": { "bubbleSize": "kilo", "brandColor": "#2C4A52" },
+    "featureFlags": { "applyFormNotice": true }
+  }
+  
