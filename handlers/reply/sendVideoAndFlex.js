@@ -8,7 +8,7 @@ module.exports = async function sendVideoAndFlex(
   {
     mp4Url = 'https://drive.usercontent.google.com/download?id=1jixrWqOvBzqcswnPUNy9inoWhA7Xvj1Y&export=download',
     previewImageUrl = 'https://img.youtube.com/vi/PMkntIbcpMc/hqdefault.jpg',
-    aspectRatio = '20:13',  // 想更高可用 '1:1'；想標準用 '16:9'
+    aspectRatio = '20:13',  // 想更高可用 '1:1'；想標準用 '16:9'/20:13
     quickReply,
     applyQRToBoth = false   // true=兩則都掛；false=只掛在第二則（建議）
   } = {}
