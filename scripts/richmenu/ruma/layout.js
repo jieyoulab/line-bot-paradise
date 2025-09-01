@@ -47,7 +47,13 @@ module.exports = function () {
       { bounds: B1, action: { type: 'message', text: '活動報名' } },
       { bounds: B2, action: { type: 'message', text: '櫓榪店舖' } },
       { bounds: B3, action: { type: 'message', text: '團體活動預約' } },
-      { bounds: B4, action: { type: 'message', text: '櫓榪竹工作室最新消息' } },
+      // { bounds: B4, action: { type: 'message', text: '櫓榪竹工作室最新消息' } },
+      { bounds: B4, action: { 
+        "type": "postback",
+        "label": "最新消息＋影片",
+        "data": "action=ruma_latest_video",
+        "displayText": "櫓榪竹工作室最新消息"
+        } },
       { bounds: B5, action: { type: 'message', text: '復興桂竹合作夥伴' } }, 
       //復興桂竹合作夥伴
     ];

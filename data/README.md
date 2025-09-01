@@ -49,14 +49,3 @@
 
 
 
-## 驗收清單（新增一個熱區時）
-
-1.layout.js：熱區 text 定稿
-
-2.products.json：新增一筆，keyword 與熱區 text 完全一致
-
-3.quickReplies.json：新增一筆，keyword 一致、items 正確
-
-4.測試命中（應回「Flex + Quick Reply」）
-
-5.測試不命中（應回 Echo）
