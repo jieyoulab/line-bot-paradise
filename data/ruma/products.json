@@ -59,10 +59,13 @@
         },
         {
           "id": "03",
-          "name": "合作地圖總覽",
-          "desc": "與在地商家、職人的合作地圖與最新消息",
-          "image": "https://example.com/partner-cover.jpg",
-          "url": "https://example.com/partners"
+          "name": "在地商家推薦-嫣泱咖啡",
+          "email": "yanyangcoffee@gmail.com",
+          "address": "336 桃園市復興區義盛里9鄰7號",
+          "desc": "2018年來自桃園復興義興部落的『嫣泱咖啡』，從父親開始種下第一顆喜愛的咖啡樹，再到數千顆咖啡園...在臺灣、在山中、在部落、在家中用我們的雙手打造一杯有溫度的咖啡。",
+          "image": "https://i.ibb.co/tw7f4NXt/cafe.jpg",
+          "url": "https://www.facebook.com/p/%E5%AB%A3%E6%B3%B1%E5%92%96%E5%95%A1-61553496663080/",
+          "url_ig": "https://www.instagram.com/yanyang_coffee/"
         }
       ]
     },{
