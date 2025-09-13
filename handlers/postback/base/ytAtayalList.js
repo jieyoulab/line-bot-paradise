@@ -1,5 +1,7 @@
-const buildQuickReplyPostback = require('../../flex/utils/quickReplyPostback');
-const videoCarousel = require('../../flex/carousel/videoCarousel');
+//# 共用 handlers（所有租戶可用）
+
+const buildQuickReplyPostback = require('../../../flex/utils/quickReplyPostback');
+const videoCarousel = require('../../../flex/carousel/videoCarousel');
 
 async function handle({ event, client /*, tenant, data */ }) {
   const videos = [

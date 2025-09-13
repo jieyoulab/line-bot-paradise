@@ -1,5 +1,5 @@
-const buildQuickReplyPostback = require('../../flex/utils/quickReplyPostback');
-const videoCarousel = require('../../flex/carousel/videoCarousel');
+const buildQuickReplyPostback = require('../../../flex/utils/quickReplyPostback');
+const videoCarousel = require('../../../flex/carousel/videoCarousel');
 
 async function handle({ event, client }) {
   const videos = [

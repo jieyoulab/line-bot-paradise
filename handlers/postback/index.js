@@ -1,77 +1,53 @@
 // handlers/postback/index.js
-const ytBambooList   = require('./ytBambooList');
-const ytAtayalList   = require('./ytAtayalList');
-const ytCorporateList= require('./ytCorporateList');
+// # 單一入口：解析 action → 查表 → 執行 handler
+//入口只做三件事：parse → lookup → execute。未知 action 走 __default__
+// handlers/postback/index.js
+// 單一入口：解析 action → 依 tenant 取對應 handler → 執行
 
-// ★ 同時回 Flex + Video 的共用函式
-const sendVideoAndFlex = require('../reply/sendVideoAndFlex');
+const { getPostbackHandlers } = require('./postbackRegistry');
+// const { parseData } = require('./utils/parseData');
 
-// ★ 新增：載入 quickReplies.json & 轉成 quickReply 物件
-const path = require('path');
-const fs   = require('fs');
-const buildQuickReply         = require('../../flex/quickReply');
-const buildQuickReplyPostback = require('../../flex/utils/quickReplyPostback');
 
-function loadQuickReplies(tenantKey) {
-  const file = path.resolve(__dirname, `../../data/${tenantKey}/quickReplies.json`);
-  if (!fs.existsSync(file)) return [];
-  return JSON.parse(fs.readFileSync(file, 'utf-8'));
-}
-
-function renderQuickReplyMessage(tpl) {
-  if (tpl.template === 'quickReplyPostback') {
-    return buildQuickReplyPostback({ text: `${tpl.keyword}：請選擇 👇`, items: tpl.items });
-  }
-  return buildQuickReply(tpl.items); // 舊格式：支援 message/uri
-}
-
+// 支援物件 / JSON 字串 / querystring
 function parseData(raw) {
-  const qs = new URLSearchParams(raw || '');
+  if (!raw) return {};
+  if (typeof raw === 'object') return raw;
+  const s = String(raw).trim();
+  if (s.startsWith('{') || s.startsWith('[')) { try { return JSON.parse(s); } catch {} }
+  const qs = new URLSearchParams(s);
   return Object.fromEntries(qs.entries());
 }
 
+
+
 async function handlePostback({ event, client, tenant }) {
-  const data = parseData(event.postback?.data);
-  const action = data.action;
+  const tenantKey = (tenant?.key || 'default').toLowerCase();
+  const raw = event?.postback?.data ?? '';
+  const data = parseData(raw);
+  const action = data?.action;
 
-  switch (action) {
-    case 'yt_bamboo_list':
-      // 你已經有 handlers/postback/ytBambooList.js 並 export { handle }
-      return ytBambooList.handle({ event, client, tenant, data });
+  console.debug('[postback] tenant=%s', tenantKey);
+  console.debug('[postback] raw data=%s', typeof raw === 'object' ? JSON.stringify(raw) : raw);
 
-    case 'yt_atayal__list':
-      return ytAtayalList.handle({ event, client, tenant, data });
-    
-    case 'yt_corporate__list':
-      return ytCorporateList.handle({ event, client, tenant, data });
+  const handlers = getPostbackHandlers(tenantKey);
+  console.debug('[postback] actions available=%s', Object.keys(handlers).join(','));
 
-    // ★★★ 新增：點圖文選單（postback）→ 同時回最新消息 Flex + 影片，並掛上原本的 QR
-    case 'ruma_latest_video': {
-      const tenantKey = tenant?.key || 'default';
+  const handler = (action && handlers[action]) || handlers.__default__;
 
-      // 用同一個 keyword 去 quickReplies.json 找到你原本那組 QR
-      const keyword = '櫓榪竹工作室最新消息';
-      const quickReplies = loadQuickReplies(tenantKey);
-      const matchedQR = quickReplies.find(q => q.keyword === keyword);
-
-      let quickReply;
-      if (matchedQR) {
-        const r = renderQuickReplyMessage(matchedQR); // { type:'text', text, quickReply }
-        quickReply = r.quickReply;                    // 只取 quickReply 物件
-      }
-
-      // 回 2 則訊息：Flex + Video（兩則都掛上 quickReply）
-      await sendVideoAndFlex(event.replyToken, client, { quickReply });
-      return true;
-    }
-    
-    default:
-      // 未知指令：回覆提示
+  try {
+    await handler({ event, client, tenant, data });
+    return true;
+  } catch (err) {
+    console.error('[postback error]', { tenantKey, action, err });
+    if (handlers.__default__ && handler !== handlers.__default__) {
+      await handlers.__default__({ event, client, tenant, data });
+    } else {
       await client.replyMessage(event.replyToken, {
         type: 'text',
-        text: `目前沒有支援這個指令，請點擊正確按鈕：${action || '(空)'}`
+        text: `處理指令時發生錯誤：${action || '(空)'}`
       });
-      return true;
+    }
+    return true;
   }
 }
 
